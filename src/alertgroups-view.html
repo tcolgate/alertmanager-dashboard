@@ -1,0 +1,63 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="alertgroups-model.html">
+<link rel="import" href="am-alertgroup.html">
+
+
+<dom-module id="alertgroups-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      .iron-selected {
+        background: #eee;
+      }
+    </style>
+
+    <alertgroups-model id="agm" am-url="[[amUrl]]" alert-groups="{{groups}}" receivers="{{receivers}}"></alertgroups-model>
+
+    <iron-selector multi fallback-selection="chat">
+      <template is="dom-repeat" items="[[receivers]]">
+        <div>[[item]]</div>
+      </template>
+    </iron-selector>
+
+    <paper-toggle-button id="hidesilenced"></paper-toggle-button>
+
+    <template is="dom-repeat" items="[[groups]]" filter="selectedReceiver">
+      <am-alertgroup labels="[[item.labels]]" blocks="[[item.blocks]]"></am-alertgroup>
+    </template>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'alertgroups-view',
+      properties: {
+        amUrl: "http://localhost:9093",
+      },
+      ready: function(){
+        let agm = this.$.agm
+        setInterval(function(){agm.updater = new Date()}, 3000);
+      },
+      selectedReceiver(alert){
+        console.log("filter ",alert)
+        return true
+      }
+    });
+  </script>
+</dom-module>

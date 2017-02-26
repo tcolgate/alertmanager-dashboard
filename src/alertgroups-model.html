@@ -1,0 +1,87 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="alertgroups-model">
+  <template>
+    <style></style>
+    <iron-ajax
+      id="ajax"
+      auto
+      url="[[_computeGroupsURL(amUrl)]]"
+      handle-as="json"
+      last-response="{{jsonData}}">
+    </iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'alertgroups-model',
+      properties: {
+        amUrl: "http://localhost:9093",
+        jsonData: {
+          type: Object,
+          value: function(){return {"data":[],"status":"init"}},
+          notify: true,
+        },
+        alertGroups: {
+          type: Array,
+          value: function(){return []},
+          notify: true,
+          computed: 'computeGroups(jsonData.data)'
+        },
+        receivers: {
+          type: Array,
+          value: function(){return []},
+          notify: true,
+          computed: 'computeReceivers(jsonData.data)'
+        },
+        status: {
+          type: String,
+          notify: true,
+          value: "",
+          computed: 'computeStatus(jsonData.status)'
+        },
+        updater: {
+          type: Number,
+          value: 0,
+          observer: 'dataUpdate',
+        }
+      },
+      _computeGroupsURL: function(amUrl) {
+        return amUrl + '/api/v1/alerts/groups';
+      },
+
+      computeGroups: function(groups) {
+        return groups
+      },
+
+      computeReceivers: function(groups) {
+        let gmap = groups.reduce(function(acc, curr) {
+          curr.blocks.forEach(function(block){
+            acc[block.routeOpts.receiver] = true
+          })
+          return acc
+        },{})
+        return Object.keys(gmap)
+      },
+      computeStatus: function(status) {
+        return status
+      },
+      dataUpdate: function(time) {
+        this.$.ajax.generateRequest()
+        return
+      },
+    });
+  </script>
+</dom-module>

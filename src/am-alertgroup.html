@@ -1,0 +1,79 @@
+<!-- @license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+
+
+<dom-module id="am-alertgroup">
+  <style include="shared-styles">
+    .label {
+      border-radius: 3px;
+      background: #eeeeee;
+      padding: 2px;
+    }
+  </style>
+  <template>
+    <paper-card heading={{labels.alertname}} on-tap="_toggleCollapse">
+      <template is="dom-repeat" items="[[_alertLabels(labels)]]">
+        <span class="label"> [[item.name]]:[[item.value]]</span>
+      </template>
+      <iron-collapse id="collapse">
+        <template is="dom-repeat" items="[[blocks]]">
+          <div class="block">
+            <template is="dom-repeat" items="[[item.alerts]]">
+              <div class="alert">
+                <div><b>Started</b>: [[item.startsAt]]</div>
+                <div><b>Ended</b>: [[item.endsAt]]</div>
+                <template is="dom-repeat" items="[[_annotationsArray(item.annotations)]]">
+                  <div> <b>[[item.name]]</b>:[[item.value]]</div>
+                </template>
+                <template is="dom-repeat" items="[[_alertLabels(item.labels)]]">
+                  <span class="label"> [[item.name]]:[[item.value]]</span>
+                </template>
+              </div>
+            </template>
+          </div>
+        </template>
+      </iron-collapse>
+    </paper-card>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'am-alertgroup',
+      properties: {
+        labels: {},
+        blocks: []
+      },
+      _toggleCollapse: function() {
+        this.$.collapse.toggle();
+      },
+      _alertLabels: function(labelMap){
+        return Object.keys(labelMap).reduce(
+              function(acc,key) {
+                if (key === "alertname") {
+                  return acc
+                }
+                acc.push({"name":key,"value":labelMap[key]})
+                return acc
+              },[])
+      },
+      _annotationsArray: function(annMap){
+        return Object.keys(annMap).reduce(
+              function(acc,key) {
+                acc.push({"name":key,"value":annMap[key]})
+                return acc
+              },[])
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,22 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/am-dashboard.html",
+  "fragments": [
+    "src/alertgroups-view.html",
+    "src/alertgroups-model.html",
+    "src/am-view404.html",
+    "src/am-alertgroup.html",
+    "src/shared-styles.html",
+    "src/am-dashboard.html",
+    "src/am-icons.html"
+  ],
+  "sourceGlobs": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "includeDependencies": [
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ]
+}
