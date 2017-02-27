@@ -9,8 +9,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/paper-badge/paper-badge.html">
 
 
 <dom-module id="am-alertgroup">
@@ -20,30 +21,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       background: #eeeeee;
       padding: 2px;
     }
+    paper-card {
+      margin-top: 5px;
+      max-width: 400px;
+      min-width: 250px;
+    }
   </style>
   <template>
-    <paper-card heading={{labels.alertname}} on-tap="_toggleCollapse">
-      <template is="dom-repeat" items="[[_alertLabels(labels)]]">
-        <span class="label"> [[item.name]]:[[item.value]]</span>
-      </template>
-      <iron-collapse id="collapse">
-        <template is="dom-repeat" items="[[blocks]]">
-          <div class="block">
-            <template is="dom-repeat" items="[[item.alerts]]">
-              <div class="alert">
-                <div><b>Started</b>: [[item.startsAt]]</div>
-                <div><b>Ended</b>: [[item.endsAt]]</div>
-                <template is="dom-repeat" items="[[_annotationsArray(item.annotations)]]">
-                  <div> <b>[[item.name]]</b>:[[item.value]]</div>
-                </template>
-                <template is="dom-repeat" items="[[_alertLabels(item.labels)]]">
-                  <span class="label"> [[item.name]]:[[item.value]]</span>
-                </template>
-              </div>
-            </template>
-          </div>
+    <paper-card  on-tap="_toggleCollapse">
+      <paper-icon-item class="card-header">
+        <paper-item-body>
+          <h2 id="header">[[labels.alertname]]</h2>
+          <paper-badge for="header">1</paper-badge>
+        </paper-item-body>
+      </paper-icon-item>
+      <div class="card-content">
+        <template is="dom-repeat" items="[[_alertLabels(labels)]]">
+          <span class="label">[[item.value]]</span>
         </template>
-      </iron-collapse>
+        <iron-collapse id="collapse">
+          <template is="dom-repeat" items="[[blocks]]">
+            <div class="block">
+              <template is="dom-repeat" items="[[item.alerts]]">
+                <paper-card>
+                  <div class="card-content">
+                    <div class="alert">
+                      <template is="dom-repeat" items="[[_annotationsArray(item.annotations)]]">
+                        <div> <b>[[item.name]]</b> [[item.value]]</div>
+                      </template>
+                      <div><b>Started</b>: [[item.startsAt]]</div>
+                      <!-- <div><b>Ended</b>: [[item.endsAt]]</div> -->
+                      <template is="dom-repeat" items="[[_alertLabels(item.labels)]]">
+                        <span class="label"> [[item.value]]</span>
+                      </template>
+                    </div>
+                  </div>
+                </paper-card>
+              </template>
+            </div>
+          </template>
+        </iron-collapse>
+      </div>
     </paper-card>
   </template>
 

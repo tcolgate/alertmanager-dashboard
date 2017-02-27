@@ -20,6 +20,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../bower_components/paper-menu/paper-submenu.html">
+<link rel="import" href="../bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="am-icons.html">
 
 <dom-module id="am-dashboard">
@@ -69,9 +73,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Drawer content -->
       <app-drawer id="drawer">
         <app-toolbar>Menu</app-toolbar>
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="Alerts" href="/alertgroups-view">Alerts</a>
-        </iron-selector>
+        <paper-menu>
+          <paper-submenu>
+            <paper-item class="menu-trigger">Alerts</paper-item>
+            <paper-toggle-button class="menu-content" checked="{{showSilenced}}">Show Silenced</paper-toggle-button>
+            <paper-menu class="menu-content">
+              <paper-submenu>
+                <paper-item class="menu-trigger">Routes</paper-item>
+                <paper-menu class="menu-content" selected-values="{{receiversFilter}}" multi>
+                  <template is="dom-repeat" items="[[receivers]]">
+                    <paper-item>[[item]]</paper-item>
+                  </template>
+                </paper-menu>
+              </paper-submenu>
+            </paper-menu>
+          </paper-submenu>
+        </paper-menu>
       </app-drawer>
 
       <!-- Main content -->
@@ -83,13 +100,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div main-title>AlertManager Dashboard</div>
           </app-toolbar>
         </app-header>
-
         <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="am-view404"
-            role="main">
-          <alertgroups-view am-url="{{amUrl}}" name="alertgroups-view"></alertgroups-view>
+          selected="[[page]]"
+          attr-for-selected="name"
+          fallback-selection="am-view404"
+          role="main">
+          <alertgroups-view 
+            name="alertgroups-view" 
+            am-url="{{amUrl}}" 
+            show-silenced="[[showSilenced]]"
+            receivers-filter="{{receiversFilter}}"
+            receivers="{{receivers}}">
+          </alertgroups-view>
           <am-view404 name="am-view404"></am-view404>
         </iron-pages>
       </app-header-layout>

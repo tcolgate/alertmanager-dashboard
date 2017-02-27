@@ -30,15 +30,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <alertgroups-model id="agm" am-url="[[amUrl]]" alert-groups="{{groups}}" receivers="{{receivers}}"></alertgroups-model>
-
-    <iron-selector multi fallback-selection="chat">
-      <template is="dom-repeat" items="[[receivers]]">
-        <div>[[item]]</div>
-      </template>
-    </iron-selector>
-
-    <paper-toggle-button id="hidesilenced"></paper-toggle-button>
-
     <template is="dom-repeat" items="[[groups]]" filter="selectedReceiver">
       <am-alertgroup labels="[[item.labels]]" blocks="[[item.blocks]]"></am-alertgroup>
     </template>
@@ -49,6 +40,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       is: 'alertgroups-view',
       properties: {
         amUrl: "http://localhost:9093",
+        receivers: {
+          type: Array,
+          notify: true,
+          value: function(){return []}
+        },
+        receiversFilter: {
+          type: Array,
+          value: function(){return []}
+        },
+        groupLabels: {
+          type: Array,
+          notify: true,
+          readOnly: true,
+          value: function(){return []}
+        },
+        groupLabelsFilter: {
+          type: Array,
+          value: function(){return []}
+        },
+        showSilenced: {
+          type: Boolean,
+          value: false
+        },
       },
       ready: function(){
         let agm = this.$.agm
