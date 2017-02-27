@@ -31,7 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <alertgroups-model id="agm" am-url="[[amUrl]]" alert-groups="{{groups}}" receivers="{{receivers}}"></alertgroups-model>
     <template is="dom-repeat" items="[[groups]]" filter="selectedReceiver">
-      <am-alertgroup labels="[[item.labels]]" blocks="[[item.blocks]]"></am-alertgroup>
+      <am-alertgroup show-silenced="[[showSilenced]]" labels="[[item.labels]]" blocks="[[item.blocks]]"></am-alertgroup>
     </template>
   </template>
 
