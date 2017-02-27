@@ -68,6 +68,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       computeReceivers: function(groups) {
         let gmap = groups.reduce(function(acc, curr) {
+          if (!curr.blocks){
+            return acc
+          }
           curr.blocks.forEach(function(block){
             acc[block.routeOpts.receiver] = true
           })

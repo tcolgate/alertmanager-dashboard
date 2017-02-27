@@ -31,8 +31,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <paper-card  on-tap="_toggleCollapse">
       <paper-icon-item class="card-header">
         <paper-item-body>
-          <h2 id="header">[[labels.alertname]]</h2>
-          <paper-badge for="header">1</paper-badge>
+          <h3>[[labels.alertname]] [[_alertCount(blocks)]]</h3>
         </paper-item-body>
       </paper-icon-item>
       <div class="card-content">
@@ -74,6 +73,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       _toggleCollapse: function() {
         this.$.collapse.toggle();
+      },
+      _alertCount: function(bs){
+        if (!bs) {
+          return 0
+        }
+        return bs.reduce(function(acc,curr){
+          return acc + curr.alerts.length
+        },0)
       },
       _alertLabels: function(labelMap){
         return Object.keys(labelMap).reduce(
